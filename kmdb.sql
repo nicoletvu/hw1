@@ -107,20 +107,21 @@
 
 DROP TABLE IF EXISTS movies;
 DROP TABLE IF EXISTS characters;
+DROP TABLE IF EXISTS actors;
 
 -- Create new tables, according to your domain model
 
 CREATE TABLE movies (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
   title TEXT,
-  release_year INTEGER,
+  created_on INTEGER,
   mpaa_rating TEXT,
   studio TEXT
 );
 
 CREATE TABLE characters (
-  id INTEGER PRIMARY KEY AUTOINCREMENT,
-  movie_id INTEGER,
+  id INTEGER PRIMARY KEY AUTOINCREMENT, -- each character gets a unique ID
+  movie_id INTEGER, -- only including movie_id and not movie title to avoid bloated table
   character_name TEXT,
   actor_name TEXT
 );
@@ -128,7 +129,7 @@ CREATE TABLE characters (
 -- Insert data into your database that reflects the sample data shown above
 -- Use hard-coded foreign key IDs when necessary
 
-INSERT INTO movies (title,release_year,mpaa_rating,studio)
+INSERT INTO movies (title,created_on,mpaa_rating,studio)
 VALUES
     ("Batman Begins",2005,"PG-13","Warner Bros."),
     ("The Dark Knight",2008,"PG-13","Warner Bros."),
@@ -152,22 +153,30 @@ VALUES
     (3,"Joseph Gordon-Levitt","John Blake"),
     (3,"Anne Hathaway","Selina Kyle");
 
-SELECT * FROM movies;
-
 -- Prints a header for the movies output
--- .print "Movies"
--- .print "======"
--- .print ""
+.print "Movies"
+.print "======"
+.print ""
 
 -- The SQL statement for the movies output
--- TODO!
+SELECT * FROM movies;
 
 -- Prints a header for the cast output
--- .print ""
--- .print "Top Cast"
--- .print "========"
--- .print ""
+.print ""
+.print "Top Cast"
+.print "========"
+.print ""
 
 
 -- The SQL statement for the cast output
--- TODO!
+SELECT
+    title,
+    actor_name,
+    character_name
+FROM characters
+LEFT JOIN
+(SELECT
+    id,
+    title
+ FROM movies) AS movies
+ ON movies.id = characters.movie_id;
