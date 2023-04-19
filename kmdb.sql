@@ -106,36 +106,53 @@
 -- Drop existing tables, so you'll start fresh each time this script is run.
 
 DROP TABLE IF EXISTS movies;
-DROP TABLE IF EXISTS actors;
+DROP TABLE IF EXISTS characters;
 
 -- Create new tables, according to your domain model
 
 CREATE TABLE movies (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
   title TEXT,
-  release_year TEXT,
+  release_year INTEGER,
   mpaa_rating TEXT,
   studio TEXT
 );
 
-CREATE TABLE actors (
+CREATE TABLE characters (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
-  first_name TEXT,
-  last_name TEXT,
   movie_id INTEGER,
-  character_name TEXT
+  character_name TEXT,
+  actor_name TEXT
 );
 
 -- Insert data into your database that reflects the sample data shown above
 -- Use hard-coded foreign key IDs when necessary
 
-UPDATE movies
-SET title = 'Batman Begins',
-    release_year = 2005,
-    mpaa_rating = 'PG-13',
-    studio = 'Warner Bros.'
-WHERE id = 1;
+INSERT INTO movies (title,release_year,mpaa_rating,studio)
+VALUES
+    ("Batman Begins",2005,"PG-13","Warner Bros."),
+    ("The Dark Knight",2008,"PG-13","Warner Bros."),
+    ("The Dark Knight Rises",2012,"PG-13","Warner Bros.");
 
+INSERT INTO characters (movie_id,character_name,actor_name)
+VALUES
+    (1,"Christian Bale","Bruce Wayne"),
+    (1,"Michael Caine","Alfred"),
+    (1,"Liam Neeson","Ra's Al Ghul"),
+    (1,"Katie Holmes","Rachel Dawes"),
+    (1,"Gary Oldman","Commissioner Gordon"),
+    (2,"Christian Bale","Bruce Wayne"),
+    (2,"Heath Ledger","Joker"),
+    (2,"Aaron Eckhart","Harvey Dent"),
+    (2,"Michael Caine","Alfred"),
+    (2,"Maggie Gyllenhaal","Rachel Dawes"),
+    (3,"Christian Bale","Bruce Wayne"),
+    (3,"Gary Oldman","Commissioner Gordon"),
+    (3,"Tom Hardy","Bane"),
+    (3,"Joseph Gordon-Levitt","John Blake"),
+    (3,"Anne Hathaway","Selina Kyle");
+
+SELECT * FROM movies;
 
 -- Prints a header for the movies output
 -- .print "Movies"
