@@ -106,8 +106,8 @@
 -- Drop existing tables, so you'll start fresh each time this script is run.
 
 DROP TABLE IF EXISTS movies;
+DROP TABLE IF EXISTS studios;
 DROP TABLE IF EXISTS characters;
-DROP TABLE IF EXISTS actors;
 
 -- Create new tables, according to your domain model
 
@@ -115,8 +115,13 @@ CREATE TABLE movies (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
   title TEXT,
   created_on INTEGER,
-  mpaa_rating TEXT,
-  studio TEXT
+  mpaa_rating TEXT
+);
+
+CREATE TABLE studios (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  studio_name TEXT,
+  movie_id INTEGER -- only including movie_id and not movie title to avoid bloated table
 );
 
 CREATE TABLE characters (
@@ -129,11 +134,17 @@ CREATE TABLE characters (
 -- Insert data into your database that reflects the sample data shown above
 -- Use hard-coded foreign key IDs when necessary
 
-INSERT INTO movies (title,created_on,mpaa_rating,studio)
+INSERT INTO movies (title,created_on,mpaa_rating)
 VALUES
-    ("Batman Begins",2005,"PG-13","Warner Bros."),
-    ("The Dark Knight",2008,"PG-13","Warner Bros."),
-    ("The Dark Knight Rises",2012,"PG-13","Warner Bros.");
+    ("Batman Begins",2005,"PG-13"),
+    ("The Dark Knight",2008,"PG-13"),
+    ("The Dark Knight Rises",2012,"PG-13");
+
+INSERT INTO studios (studio_name,movie_id)
+VALUES
+    ("Warner Bros.",1),
+    ("Warner Bros.",2),
+    ("Warner Bros.",3);
 
 INSERT INTO characters (movie_id,character_name,actor_name)
 VALUES
@@ -154,14 +165,28 @@ VALUES
     (3,"Anne Hathaway","Selina Kyle");
 
 -- Prints a header for the movies output
+
 .print "Movies"
 .print "======"
 .print ""
 
 -- The SQL statement for the movies output
-SELECT * FROM movies;
+
+SELECT
+    title,
+    created_on,
+    mpaa_rating,
+    studio_name
+FROM movies
+LEFT JOIN
+(SELECT
+    movie_id,
+    studio_name
+    FROM studios) AS studios
+ ON movies.id = studios.movie_id;
 
 -- Prints a header for the cast output
+
 .print ""
 .print "Top Cast"
 .print "========"
@@ -169,6 +194,7 @@ SELECT * FROM movies;
 
 
 -- The SQL statement for the cast output
+
 SELECT
     title,
     actor_name,
